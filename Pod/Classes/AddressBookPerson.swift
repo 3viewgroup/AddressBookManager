@@ -138,13 +138,8 @@ public class AddressBookPerson: AddressBookRecord {
         }
         
         set {
-            guard let newValue = newValue else {
-                return
-            }
-            
-            if let imageData: NSData = UIImagePNGRepresentation(newValue) {
-                ABPersonSetImageData(self.record, imageData, nil)
-            }
+            let imageData: NSData = UIImagePNGRepresentation(newValue!)!
+            ABPersonSetImageData(self.record, imageData, nil)
         }
     }
     
@@ -244,9 +239,9 @@ public class AddressBookPerson: AddressBookRecord {
     /**
         Converts Dictionary To MultiValue Dictionary
     
-        - parameter values: Dictionary to convert
+        :param: values Dictionary to convert
     
-        - returns: Array of MultiValue Dictionaries
+        :returns: Array of MultiValue Dictionaries
     */
     private func convertMultiValueToNSDictionary<T: AnyObject>(values: Array<MultiValue<Dictionary<AddressProperty, T>>>?) -> [MultiValue<NSDictionary>]? {
         var result: [MultiValue<NSDictionary>]?
@@ -257,7 +252,7 @@ public class AddressBookPerson: AddressBookRecord {
                 let dictionary = value.value
                 
                 var ABAddressDictionary = Dictionary<String, AnyObject>()
-                for (key, value): (AddressProperty, T) in dictionary! {
+                for (key , value) in dictionary! {
                     ABAddressDictionary[key.getABAddressPropertyKey] = value
                 }
                 
@@ -271,9 +266,9 @@ public class AddressBookPerson: AddressBookRecord {
     /**
         Convert String to NSString
     
-        - parameter values: Array of strings that are to be converted
+        :param: values Array of strings that are to be converted
     
-        - returns: Array of MultiValue NSStrings
+        :returns: Array of MultiValue NSStrings
     */
     private func convertMultiValueToNSString(values: Array<MultiValue<String>>?) -> [MultiValue<NSString>]? {
         var result: [MultiValue<NSString>]?
@@ -291,10 +286,10 @@ public class AddressBookPerson: AddressBookRecord {
     /**
         Sets single value for address book property
     
-        - parameter property: Property for which value is being set
-        - parameter value: Value of the property
+        :param: property Property for which value is being set
+        :param: value Value of the property
     
-        - returns: Error, if one occurs setting a value
+        :returns: Error, if one occurs setting a value
     */
     func setSingleProperty(property: ABPropertyID, value: AnyObject?) -> CFError? {
         return AddressBookPropertyManager.setSingleProperty(record: self.record, property: property, value: value)
@@ -303,9 +298,9 @@ public class AddressBookPerson: AddressBookRecord {
     /**
         Retrieves single value for address book property
     
-        - parameter property: Property for which single value is being retrieved for
+        :param: property Property for which single value is being retrieved for
     
-        - returns: Single value of the property
+        :returns: Single value of the property
     */
     func getSingleProperty<T>(property: ABPropertyID) -> T? {
         return AddressBookPropertyManager.getSingleProperty(record: self.record, property: property)
@@ -314,8 +309,8 @@ public class AddressBookPerson: AddressBookRecord {
     /**
         Sets multi value for address book property
     
-        - parameter property: Property for which multi value is being set
-        - parameter values: Array of MultiValue instances
+        :param: property Property for which multi value is being set
+        :param: values Array of MultiValue instances
     */
     func setMultiValueProperty<T: AnyObject>(property: ABPropertyID, values: Array<MultiValue<T>>?) {
         AddressBookPropertyManager.setMultiValueProperty(record: self.record, property: property, values: values)
@@ -324,9 +319,9 @@ public class AddressBookPerson: AddressBookRecord {
     /**
         Retrieves multi value for address book property
     
-        - parameter property: Property for which multi value is being retrieved for
+        :param: property Property for which multi value is being retrieved for
     
-        - returns: Value of property as an array of multi value instances
+        :returns: Value of property as an array of multi value instances
     */
     func getMultiValueProperty<T>(property: ABPropertyID) -> Array<MultiValue<T>>? {
         return AddressBookPropertyManager.getMultiValueProperty(record: self.record, property: property)
@@ -335,10 +330,10 @@ public class AddressBookPerson: AddressBookRecord {
     /**
         Retrieves multi value dictionary for address book property
     
-        - parameter property: Property for which multi value dictionary is being retrieved for
-        - parameter convertor: Block to convert from type T to type U
+        :param: property Property for which multi value dictionary is being retrieved for
+        :param: convertor Block to convert from type T to type U
     
-        - returns: Value of address book property as an array of multi value dictionaries
+        :returns: Value of address book property as an array of multi value dictionaries
     */
     func getMultiValueDictionaryProperty<T,U,V: AnyObject>(
         property: ABPropertyID,
@@ -350,9 +345,9 @@ public class AddressBookPerson: AddressBookRecord {
     /**
         Converts array of ABRecord instances to an array of AddressBookPerson instances
     
-        - parameter records: Array of records to be converted
+        :param: records Array of records to be converted
     
-        - returns: Array of converted records to AddressBookPerson
+        :returns: Array of converted records to AddressBookPerson
     */
     class func convertToSelf(records: CFArray?) -> [AddressBookPerson]? {
         return (records as? [ABRecord])?.map {(record: ABRecord) -> AddressBookPerson in
